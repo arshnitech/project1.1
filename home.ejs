@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Home Page</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #ecf5ff ;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .header {
+      width: 100%;
+      padding: 10px;
+      background-color: #333;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-dropdown {
+      position: relative;
+    }
+
+    .user-dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f9f9f9;
+      min-width: 120px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+    .user-dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .user-dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .user-dropdown:hover .user-dropdown-content {
+      display: block;
+    }
+
+    .content {
+      display: flex;
+      justify-content: left;
+      align-items: center;
+      margin-top: 60px;
+    }
+
+    .details {
+      width: 100%;
+      height: 610px;
+      display: flex;
+      flex-direction: row;
+    }
+
+    #existing-table {
+      flex: 1;
+      /* Take up remaining space */
+      flex-basis: auto;
+      /* Add some spacing between the two sections */
+      padding: 20px;
+      overflow: auto;
+      height: 400px;
+      border: 1px solid #ccc;
+      /* Add a border for visual separation */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      /* Add a shadow for depth */
+    }
+
+    #iframe-container {
+      flex: 3;
+      /* Take up remaining space */
+      /* Set fixed height to 600px */
+      border: 1px solid #ccc;
+      /* Add a border for visual separation */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      /* Add a shadow for depth */
+      flex-basis: auto;
+      padding: 20px;
+      overflow: auto;
+      height: 400px;
+    }
+
+    .full-view-button {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      z-index: 999;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+
+    .details h2 {
+      margin-bottom: 10px;
+    }
+
+    .lab-cart {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .lab-cart img {
+      width: 150px;
+    }
+
+    .start-lab-button {
+      border-radius: 50%;
+      /* Creates oval shape */
+      background-color: blue;
+      color: white;
+      /* Text color */
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      /* Remove border */
+    }
+
+    .table-container {
+      display: flex;
+      border: 1px solid black;
+      /* Outer border */
+      flex: 1;
+    }
+
+    .vm-table {
+      border: 1px solid #ccc;
+      /* Add a border for visual separation */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      /* Add a shadow for depth */
+      /* Outer border */
+      padding: 5px;
+      width: 450px;
+      /* Set fixed width */
+      height: 250px;
+    }
+
+    .vm-table td {
+      border: none;
+      /* Remove cell borders */
+      padding: 5px;
+      /* Add padding */
+    }
+
+    .timer-container {
+      position: absolute;
+      top: 80px;
+      /* Adjust the top value to fit below the header */
+      right: 20px;
+      /* Align to the right */
+      background-color: green;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    #iframe-container.fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background-color: white;
+      /* Optionally set a background color */
+    }
+    .fadeLoader {
+  animation: fadeInOut 1.5s ease-in-out infinite;
+}
+/* Remove any green background from timer container */
+/* Main container for buttons + dropdown + timer */
+.action-bar {
+  display: flex;
+  justify-content: space-between; /* Space between buttons and timer */
+  align-items: center;
+  gap: 20px;
+  margin: 20px;
+  padding: 10px 20px;
+  flex-wrap: wrap;
+}
+
+/* Left section for buttons and dropdown */
+.left-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Button styling */
+.action-button {
+  padding: 8px 14px;
+  font-size: 16px;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blue-button {
+  background-color: #007bff;
+}
+
+.green-button {
+  background-color: #28a745;
+}
+
+/* Icon size */
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Dropdown styling */
+.project-dropdown {
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Timer adjustments to fit within layout */
+#timer-container {
+  position: static; /* Override absolute positioning */
+  background: transparent;
+  box-shadow: none;
+}
+
+.doughnut-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.doughnut {
+  transform: rotate(-90deg);
+}
+
+.doughnut-bg {
+  fill: none;
+  stroke: #e0e0e0;
+  stroke-width: 12;
+}
+
+.doughnut-ring {
+  fill: none;
+  stroke: url(#progress-gradient);
+  stroke-width: 15;
+  stroke-linecap: round;
+  stroke-dasharray: 450;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
+#timer-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+}
+
+.vm-container {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+  flex-wrap: wrap; /* Responsive wrap on smaller screens */
+}
+
+.vm-left {
+  flex: 1;
+  min-width: 250px;
+  max-width: 25%;
+}
+
+.vm-right {
+  flex: 3;
+  max-width: 75%;
+  min-width: 300px;
+}
+
+/* Optional: make the table full width inside the left column */
+.vm-left .vm-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Optional for iframe full width inside right */
+.vm-right #iframe-container {
+  width: 100%;
+}
+
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+  </style>
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>VM Harbor details</h1>
+    <div class="user-dropdown">
+      <span>Welcome, <%= user.user_fname %></span>
+      <div class="user-dropdown-content">
+        <a href="/logout">Logout</a>
+      </div>
+    </div>
+  </div>
+ <!-- <div id="timer-container" class="timer-container" type="hidden">
+    <p>Today's Remaining Hours: <span id="timer-label"></span></p>
+  </div> -->
+
+
+  <div class="action-bar">
+    <div class="left-actions">
+      <button id="submitBtn1" class="action-button blue-button">
+        <img src="http://localhost:4000/resulticon.png" alt="Results" class="icon"> Evaluation Results
+      </button>
+  
+      <button id="submitBtn" class="action-button green-button">
+        <img src="http://localhost:4000/evalicon.png" alt="Submit" class="icon"> Submit for Evaluation
+      </button>
+  
+      <select id="projectSelect" name="project" class="project-dropdown">
+        <option value="project1">Project 1</option>
+        <option value="project2">Project 2</option>
+      </select>
+    </div>
+  
+    <div id="timer-container">
+      <div class="doughnut-container">
+        <svg class="doughnut" width="80" height="80">
+          <defs>
+            <linearGradient id="progress-gradient" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00bcd4"/>
+              <stop offset="50%" stop-color="#4caf50"/>
+              <stop offset="100%" stop-color="#ff9800"/>
+            </linearGradient>
+          </defs>
+          <circle class="doughnut-bg" cx="40" cy="40" r="30"></circle>
+          <circle class="doughnut-ring" cx="40" cy="40" r="30"></circle>
+        </svg>
+        <div id="timer-label">00:00:00</div>
+      </div>
+    </div>
+
+  </div>
+  <!-- 🔄 Progress loader (initially hidden) 
+<div id="progressContainer" style="display: none; text-align: center; margin-bottom: 20px; background: none;">
+  <img src="/spinnert.gif" class="fadeLoader" alt="Loading..." width="60" height="60" style="background: none" />
+  <p style="font-size: 16px; color: rgb(100, 25, 238);" class="fadeLoader">Evaluating... Please wait.</p>
+</div> -->
+
+<div id="progressContainer" style="display: none; text-align: center; margin-top: 10px;">
+  <img src="/spinnert.gif" class="fadeLoader" alt="Loading..." width="60" height="60" style="background: none;" />
+  <p style="font-size: 16px; color: rgb(100, 25, 238);" class="fadeLoader">Evaluating... Please wait.</p>
+</div>
+
+<!-- <div class="vm-container" style="display: flex; gap: 20px; width: 100%; min-height: 300px; height: calc(100vh - 300px);"> 
+   Left Column: VM Assigned Table (30%) -->
+  <!-- <div class="vm-left" style="flex: 0 0 30%; max-width: 30%; overflow-y: auto; height: 100%;">  -->
+    <div class="content">
+      <div class="details">
+  
+        <% if (userDataArray && userDataArray.length> 0) { %>
+          <% for (let i=0; i < userDataArray.length; i++) { %>
+            <% const currentDate=new Date(); %>
+              <% const endDate=new Date(userDataArray[i].EndDate); %>
+                <% if (currentDate <=endDate) { %>
+  
+                  <div id="existing-table">
+                    <table class="vm-table">
+                      <tr>
+  
+                        <td><input id="mapID" type="hidden" value="<%= userDataArray[i].MappingID %>">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><span style="color : blue;">VM Assigned:</span></td>
+                        <td>
+                          <%= userDataArray[i].OsType %>
+                        </td>
+                      </tr>
+                      <!-- <tr>
+                    <td><span style="color: blue;">IPAddress:</span></td>
+                    <td><%= userDataArray[i].IPAddress %></td>
+                  </tr> -->
+                      <tr>
+                        <td><span style="color: blue;">Start Date:</span></td>
+                        <td>
+                          <%= new Date(userDataArray[i].StartDate).toLocaleDateString('en-GB', { day: '2-digit' ,
+                            month: 'short' , year: 'numeric' }) %>
+                            <%= new Date(userDataArray[i].StartDate).toLocaleTimeString('en-US', { hour12: false }) %>
+                        </td>
+                      </tr>
+  
+                      <tr>
+                        <td><span style="color: blue;">Total Hours Allotted:</span></td>
+                        <td>
+                          <%= userDataArray[i].TotalHrsAlloted %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><span style="color: blue;">Each Day Hours Allotted:</span></td>
+                        <td>
+                          <%= userDataArray[i].EachdayHrsAlloted %>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><span style="color: blue;">Each Day Consumed Hours :</span></td>
+                        <td>
+                          <%= userDataArray[i].EachDayHoursConsumed !==null ? userDataArray[i].EachDayHoursConsumed : 0 %>
+                        </td>
+  
+                      </tr>
+                      <tr>
+                        <td><span style="color: blue;">Total Consumed Hours:</span></td>
+                        <td>
+                          <%= userDataArray[i].TotalHoursConsumed !==null ? userDataArray[i].TotalHoursConsumed : 0 %>
+                        </td>
+                      </tr>
+                      <% // Calculate remaining hours const remainingHours=userDataArray[i].TotalHrsAlloted -
+                        userDataArray[i].hoursConsumed; %>
+                        <tr>
+                          <td><span style="color: blue;">Remaining Hours:</span></td>
+                          <td>
+                            <%= userDataArray[i].BalanceHours !==null ? userDataArray[i].BalanceHours : 0 %>
+                          </td>
+  
+                        </tr>
+                        <tr>
+                        <tr>
+                          <td><span style="color: blue;">End Date:</span></td>
+                          <td>
+                            <%= new Date(userDataArray[i].EndDate).toLocaleDateString('en-GB', { day: '2-digit' ,
+                              month: 'short' , year: 'numeric' }) %>
+                              <%= new Date(userDataArray[i].EndDate).toLocaleTimeString('en-US', { hour12: false }) %>
+                          </td>
+                        </tr>
+  
+                        <!-- <tr>
+                          <td>
+                            <div class="lab-cart">
+  
+                              <button id="start-vm" class="start-lab-button"
+                                onclick="startVM('<%= userDataArray[i].IPAddress %>','<%= userDataArray[i].MappingID %>','<%= userDataArray[i].EachdayHrsAlloted %>','<%= userDataArray[i].TotalHrsAlloted %>','<%= userDataArray[i].TotalHoursConsumed %>','<%= userDataArray[i].EachDayHoursConsumed %>','<%= userDataArray[i].StartDate %>','<%= userDataArray[i].EndDate %>', '<%= userDataArray[i].UserEmail %>')">Start
+                                VM</button>
+                              <img id="loading-icon" class="loading-icon" style="display:none"
+                                src="http://localhost:4000/progressbar.gif" alt="Loading..." width="15" height="20">
+                            </div>
+                          </td>
+                          <td>
+                            <div class="lab-cart">
+                              <button id="stop-vm" class="start-lab-button" style='display:none'
+                                onclick="stopVM('<%= userDataArray[i].IPAddress %>', '<%= userDataArray[i].MappingID %>')">Stop
+                                VM</button>
+                            </div>
+                          </td>
+                        </tr> -->
+  
+                        <tr>
+                          <td>
+                            <div class="lab-cart">
+                              <button id="start-vm" class="start-lab-button" style="background:none; border:none; padding:0;"
+                                onclick="startVM('<%= userDataArray[i].IPAddress %>','<%= userDataArray[i].MappingID %>','<%= userDataArray[i].EachdayHrsAlloted %>','<%= userDataArray[i].TotalHrsAlloted %>','<%= userDataArray[i].TotalHoursConsumed %>','<%= userDataArray[i].EachDayHoursConsumed %>','<%= userDataArray[i].StartDate %>','<%= userDataArray[i].EndDate %>', '<%= userDataArray[i].UserEmail %>')">
+                                <img src="http://localhost:4000/Starticon.png" alt="Start VM" width="auto" height=auto>
+                              </button>
+                              <img id="loading-icon" class="loading-icon" style="display:none"
+                                src="http://localhost:4000/progressbar.gif" alt="Loading..." width="auto" height=auto>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="lab-cart">
+                              <button id="stop-vm" class="start-lab-button" style="display:none; background:none; border:none; padding:0;"
+                                onclick="stopVM('<%= userDataArray[i].IPAddress %>', '<%= userDataArray[i].MappingID %>')">
+                                <img src="http://localhost:4000/stopicon1.png" alt="Stop VM" width="auto" height=auto>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        
+  
+                        <tr id="usernamev" style="display: none;">
+                          <td>
+                            <label id="usernamev" for="vm-username" style="color: blue; display:none;">Username:</label>
+                          </td>
+                          <td>
+                            <div>
+                              <span id="vm-username-value" style="display: none;" >
+                                <%= userDataArray[i].guacamoleusername %>
+                              </span>
+                              <button class="copy-button" onclick="copyToClipboard('vm-username-value')" style="display: none;">
+                                <img src="http://localhost:4000/copyicon.jpeg" alt="Copy Icon"
+                                  style="width: 10px; height: 10px;border: none;display: none;">
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr id="passwordv" style="display: none;">
+                          <td>
+                            <label for="vm-password" style="color: blue">Password:</label>
+                          </td>
+                          <td>
+                            <div>
+                              <span id="vm-password-value">
+                                <%= userDataArray[i].guacamolepasswd %>
+                              </span>
+                              <button class="copy-button" onclick="copyToClipboard('vm-password-value')">
+                                <img src="http://localhost:4000/copyicon.jpeg" alt="Copy Icon"
+                                  style="width: 10px; height: 10px;border: none;">
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+  
+                        </tr>
+                    </table>
+                  </div>
+                  <div id="iframe-container"
+                    style="position: relative; width: 600px; height: 400px; overflow: auto; display:none;">
+                    <!-- Right side iframe content goes here -->
+                    <iframe id="iframe" style="width: 100%; height: 100%; border: none;"></iframe>
+  
+                    <img id="full-view-image" class="full-view-button" src="http://localhost:4000/FullScreenImage1.jpg"
+                      alt="Full View" style="width: 7%; height: 7%; cursor: pointer;" onclick="openFullScreen()">
+                  </div>
+  
+  
+  
+                  <% } %>
+  
+      </div>
+  
+  
+  
+      <% } %>
+        <% } else { %>
+          <p>No additional data found.</p>
+  
+          <% } %>
+            <!-- <div class="lab-cart">
+  
+  
+              <button id="login-vm" class="start-lab-button" onclick="loginVM()" style="display: none">Login VM</button>
+            </div> -->
+            <div class="lab-cart">
+              <button id="login-vm"  onclick="loginVM()" style="display: none">
+                <img src="http://localhost:4000/loginvm.png" alt="Login" width="auto" height="auto" />
+              </button>
+            </div>
+    </div>
+  <!-- </div>   left div container closed-->
+<!--</div> vm-container closed-->
+
+  
+  
+</body>
+
+</html>
+
+<script>
+  // Disable the Stop VM and Login VM buttons initially
+  document.getElementById('stop-vm').style.display = 'none';
+  document.getElementById('login-vm').style.display = 'none';
+  document.getElementById('loading-icon').style.display = 'none';
+  document.getElementById('usernamev').style.display = 'none';
+  document.getElementById('passwordv').style.display = 'none';
+  let timerInterval;
+
+  function decimalHoursToHHMMSS(decimalHours) {
+    // Convert decimal hours to seconds
+    const totalSeconds = decimalHours * 3600;
+
+    // Calculate hours, minutes, and seconds
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+
+    // Format the time as HH:MM:SS
+    const formattedTime = pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+
+    return formattedTime;
+  }
+
+
+
+  function copyToClipboard(elementId) {
+    var element = document.getElementById(elementId);
+    var text = element.innerText;
+
+    var textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+
+    textarea.select();
+    document.execCommand('copy');
+
+    document.body.removeChild(textarea);
+  }
+
+  function stopVM(ipAddress, mappingID,) {
+    const timerLabel = document.getElementById('timer-label');
+
+    //    alert("mappingID in stopvm" + mappingID);
+    try {
+      // Send a POST request to the server to stop the VM
+      document.getElementById('loading-icon').style.display = 'display';
+      fetch('/stop-vm', {
+
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mappingID: mappingID }) // Pass only the mappingID
+      })
+
+        .then(response => {
+          if (response.ok) {
+            // Optionally handle success response
+            alert('VM stopped successfully.');
+            timerLabel.textContent = '00:00:00';
+            clearInterval(timerInterval);
+            document.getElementById('iframe-container').style.display = 'none';
+          } else {
+            // Optionally handle error response
+            console.error('Failed to stop VM.');
+          }
+          document.getElementById('start-vm').style.display = 'block';
+          // Enable the Stop VM and Login VM buttons
+          document.getElementById('stop-vm').style.display = 'none';
+          document.getElementById('login-vm').style.display = 'none';
+          document.getElementById('loading-icon').style.display = 'none';
+          document.getElementById('usernamev').style.display = 'none';
+          document.getElementById('passwordv').style.display = 'none';
+        })
+        .catch(error => {
+          // Handle network errors
+          console.error('Error:', error);
+        });
+    } catch (error) {
+      console.error('Unhandled error:', error);
+      // Handle the error gracefully
+      alert('An unexpected error occurred. Please try again later.');
+    }
+  }
+
+  function startVM(ipAddress, mappingID, eachDayHrsAlloted, totalHrsAlloted, hoursConsumed, eachdayhoursConsumed, startDate, endDate, useremail) {
+    // Call the endpoint to calculate consumed hours for the user for the current day
+    //alert(startDate,endDate);
+    //  alert(mappingID + ', ' + eachDayHrsAlloted + ', ' + eachdayhoursConsumed + ' , ' +useremail);
+
+    //req.session.mappingID=mappingID;
+    try {
+      //document.getElementById('loading-icon').style.display = 'block';
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0');
+      var yyyy = today.getFullYear();
+      today = yyyy + '-' + mm + '-' + dd;
+
+      if (today <= endDate) {
+        const hoursConsumed1 = timeToDecimal(hoursConsumed);
+        const totalHrsAlloted1 = timeToDecimal(totalHrsAlloted);
+        if (hoursConsumed1 <= totalHrsAlloted1) {
+          // Extract EachdayHrsAlloted from userDataArray[i]
+          // Check if consumed hours are less than or equal to EachdayHrsAlloted
+          const eachdayhoursConsumed1 = timeToDecimal(eachdayhoursConsumed);
+          const eachDayHrsAlloted1 = timeToDecimal(eachDayHrsAlloted);
+          if (eachdayhoursConsumed1 <= eachDayHrsAlloted1) {
+            // Proceed to start the VM
+            const eachdaybalancehrs = eachDayHrsAlloted1 - eachdayhoursConsumed1;
+            //       alert("each day balance hrs" + eachdaybalancehrs);
+            document.getElementById('loading-icon').style.display = 'block';
+            //mapps=document.getElementById('mapID').value;
+            //  alert("mappingID is"+mappingID);
+            fetch('/start-vm', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ ipAddress: ipAddress, mappingID: mappingID, eachdaybalancehrs: eachdaybalancehrs, useremail: useremail })
+            })
+              .then(response => {
+                if (response.ok) {
+                  // Optionally handle success response
+                  console.log('VM started successfully.');
+                  // Display a notification to the user
+                  alert('VM started successfully.');
+                  // Start the timer only if VM started successfully
+                  updateTimer(eachdaybalancehrs);
+                  // Disable the Start VM button
+                  document.getElementById('start-vm').style.display = 'none';
+                  // Enable the Stop VM and Login VM buttons
+                  document.getElementById('stop-vm').style.display = 'block';
+                  document.getElementById('login-vm').style.display = 'block';
+                  document.getElementById('usernamev').style.display = 'table-row';
+                  document.getElementById('passwordv').style.display = 'table-row';
+                  document.getElementById('loading-icon').style.display = 'none';
+                } else {
+                  // Optionally handle error response
+                  console.error('Failed to start VM.');
+                  // Display an error notification to the user
+                  alert('Failed to start VM.');
+                  document.getElementById('start-vm').style.display = 'block';
+                  // Enable the Stop VM and Login VM buttons
+                  document.getElementById('stop-vm').style.display = 'none';
+                  document.getElementById('login-vm').style.display = 'none';
+                  document.getElementById('loading-icon').style.display = 'none';
+                }
+              })
+              .catch(error => {
+                // Handle network errors
+                console.error('Error:', error);
+                // Display an error notification to the user
+                alert('Error starting VM. Please try again later.');
+                document.getElementById('start-vm').style.display = 'block';
+                // Enable the Stop VM and Login VM buttons
+                document.getElementById('stop-vm').style.display = 'none';
+                document.getElementById('login-vm').style.display = 'none';
+                document.getElementById('loading-icon').style.display = 'none';
+              });
+          } else {
+            // Display an error notification if consumed hours exceed EachdayHrsAlloted
+            alert('You have exceeded your daily allotted hours.');
+          }
+        } else {
+          // Display an error notification if consumed hours exceed total hours allotted
+          alert('You have exceeded your total allotted hours.');
+        }
+      }
+      else {
+        alert('Your allotted scheduled is expired.');
+      }
+    } catch (error) {
+      // Handle any unhandled error
+      console.error('Unhandled error:', error);
+      alert('An unexpected error occurred. Please try again later.');
+    }
+  }
+
+
+
+  // Convert time in HH:MM:SS format to decimal value (hours)
+  function timeToDecimal(time) {
+    const [hours, minutes, seconds] = time.split(':').map(Number);
+    return hours + (minutes / 60) + (seconds / 3600);
+  }
+
+
+  function loginVM() {
+    document.getElementById('login-vm').style.display = 'none';
+    var iframeContainer = document.getElementById('iframe-container');
+    iframeContainer.style.display = 'block';
+    console.log("Control Entered loginVM block");
+
+    // Fetch the redirect.ejs content
+    fetch('/redirect')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text(); // Extract the HTML content
+      })
+      .then(htmlContent => {
+        // Set the HTML content to the iframe
+        // alert(document.getElementById('iframe').src);
+        document.getElementById('iframe').src = "data:text/html;charset=utf-8," + escape(htmlContent);
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+
+    // Show the full view button
+    document.getElementById('full-view-button').style.display = 'block';
+  }
+
+
+
+
+
+  function updateTimer(balanceHours) {
+
+    alert("BalanceHours is " + balanceHours);
+    const timerLabel = document.getElementById('timer-label');
+
+    // Convert hours to seconds
+    let remainingSeconds = balanceHours * 3600;
+
+    // Update the timer every second
+    timerInterval = setInterval(() => {
+      if (remainingSeconds >= 0) {
+        // Calculate hours, minutes, and seconds
+        const hours = Math.floor(remainingSeconds / 3600);
+        const minutes = Math.floor((remainingSeconds % 3600) / 60);
+        const seconds = Math.floor(remainingSeconds % 60);
+
+
+        // Format the time as HH:MM:SS
+        const formattedTime = pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+
+        // Display remaining time
+        timerLabel.textContent = formattedTime;
+        remainingSeconds--; // Decrease remaining hours
+      } else {
+        // Timer reaches zero, display '00:00:00' and stop the timer
+        timerLabel.textContent = '00:00:00';
+        clearInterval(timerInterval); // Stop the timer
+        stopVM(); // Call the stopVM method
+      }
+    }, 1000); // Update the timer every second
+
+    // Function to pad single digit numbers with a leading zero
+    function pad(num) {
+      return num < 10 ? '0' + num : num;
+    }
+  }
+
+  // Attach an event listener to the window's beforeunload event
+  // Attach an event listener to the window's beforeunload event
+  window.addEventListener('beforeunload', function (event) {
+    // Call the stopVM method when the window is about to unload
+    stopVM();
+
+    // Optionally return a message (some browsers may display it to the user)
+    var confirmationMessage = 'Your VM is stopped, you can leave now';
+    event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
+    return confirmationMessage; // Gecko, WebKit, Chrome <34
+  });
+
+  // Flag to track whether the current tab is active
+  var isTabActive = true;
+
+  // Event listener for when the window gains focus (tab becomes active)
+  window.addEventListener('focus', function () {
+    isTabActive = true;
+  });
+
+  // Event listener for when the window loses focus (tab becomes inactive)
+  window.addEventListener('blur', function () {
+    isTabActive = false;
+  });
+
+  // Attach an event listener to the window's beforeunload event
+  window.addEventListener('beforeunload', function (event) {
+    // If the tab is inactive (lost focus), assume it's being closed by the user
+
+    stopVM();
+
+  });
+
+
+
+
+
+
+
+  function openFullScreen() {
+    // Fetch the redirect.ejs content
+    // Fetch the redirect.ejs content
+    // Fetch the redirect.ejs content
+    console.log("Control Entered openFullScreen block");
+
+    // Fetch the redirect.ejs content
+    fetch('/redirect')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text(); // Extract the HTML content
+      })
+      .then(htmlContent => {
+        // Create a new window and set its content to the fetched HTML
+        var newWindow = window.open("", "_blank");
+        newWindow.document.write(htmlContent);
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+  }
+
+  document.getElementById("submitBtn").addEventListener("click", async function() {
+        const selectedProject = document.getElementById("projectSelect").value;
+        const progress = document.getElementById("progressContainer");
+
+        if (!selectedProject) {
+            alert("Please select a project before submitting.");
+            return;
+        }
+           // Show the progress bar/image
+    progress.style.display = "block";
+        try {
+            const response = await fetch("/evaluateipynb", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ project: selectedProject })
+            });
+            const result = await response.json();
+             // Hide the progress bar/image
+        progress.style.display = "none";
+            alert(result.message);
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Failed to submit evaluation.");
+        }
+        finally {
+        document.getElementById("progressContainer").style.display = "none"; // Hide progress bar
+    }
+    });
+ 
+
+
+document.getElementById("submitBtn1").addEventListener("click", async function () {
+    try {
+        const response = await fetch("/getEvaluationResults"); // Fetch from backend
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(`Error: ${data.message}`);
+            return;
+        }
+
+        // Create the modal for displaying results
+        let modal = document.createElement("div");
+        modal.style.position = "fixed";
+        modal.style.top = "50%";
+        modal.style.left = "50%";
+        modal.style.transform = "translate(-50%, -50%)";
+        modal.style.backgroundColor = "#fff";
+        modal.style.padding = "20px";
+        modal.style.border = "1px solid #ccc";
+        modal.style.borderRadius = "10px";
+        modal.style.boxShadow = "0px 4px 6px rgba(0,0,0,0.1)";
+        modal.style.zIndex = "1000";
+
+        let summaryTable = `<h3>Evaluation Summary</h3>
+        <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc;">
+                            <table border='1' style='width:100%; border-collapse: collapse;'>
+                              <thead>  
+                              <tr>
+                                    <th>Attempt ID</th>
+                                    <th>Score_gained</th>
+                                    <th>Max Score</th>
+                                    <th>Submission DateTime </th>
+                                   
+                                </tr>
+                                </thead>
+                                <tbody>`;
+
+        data.summary.forEach((row) => {
+            summaryTable += `<tr onclick="showDetails('${row.attempt_id}')"
+                                 style="cursor:pointer; background-color:#f0f0f0;">
+                                <td>${row.attempt_id}</td>
+                                <td>${row.total_score}</td>
+                                <td>${row.total_max_score}</td>
+                                <td>${row.timestamp}</td>
+                                
+                            </tr>`;
+        });
+
+        summaryTable += "</tbody></table></div><br><button onclick='closeModal()'>Close</button>";
+
+        modal.innerHTML = summaryTable;
+        document.body.appendChild(modal);
+
+        // Store details in a global variable for retrieval
+        window.evalDetails = data.details;
+
+    } catch (error) {
+        console.error("Error fetching evaluation results:", error);
+        alert("Failed to fetch evaluation results.");
+    }
+});
+
+function showDetails(attemptId) {
+    let details = window.evalDetails.filter(row => row.attempt_id == attemptId);
+    if (details.length === 0) {
+        alert("No details found for this attempt.");
+        return;
+    }
+
+    let detailTable = `<h3>Details for Attempt ${attemptId}</h3>
+                       <table border='1' style='width:100%; border-collapse: collapse;'>
+                            <tr>
+                                <th>Task #</th>
+                                <th>Method Name</th>
+                                <th>Score Gained</th>
+                                <th>Max Score</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>`;
+
+    details.forEach((row, index) => {
+        let statusColor = "red"; // Default for zero score
+        if (row.score_gained == row.max_score) {
+            statusColor = "green"; // Full score
+        } else if (row.score_gained > 0) {
+            statusColor = "orange"; // Partial score
+        }
+
+        detailTable += `<tr>
+                            <td>${index + 1}</td>
+                            <td>${row.method_name}</td>
+                            <td>${row.score_gained}</td>
+                            <td>${row.max_score}</td>
+                            <td style="text-align:center;">
+                                <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:${statusColor};"></span>
+                            </td>
+                            <td>${row.remarks}</td>
+                        </tr>`;
+    });
+
+    detailTable += "</table>";
+
+    // Create a new modal container
+    let detailModal = document.createElement("div");
+    detailModal.id = "detailModal";
+    detailModal.style.position = "fixed";
+    detailModal.style.top = "50%";
+    detailModal.style.left = "50%";
+    detailModal.style.transform = "translate(-50%, -50%)";
+    detailModal.style.backgroundColor = "#fff";
+    detailModal.style.padding = "10px";
+    detailModal.style.border = "1px solid #ccc";
+    detailModal.style.borderRadius = "10px";
+    detailModal.style.boxShadow = "0px 4px 6px rgba(0,0,0,0.1)";
+    detailModal.style.zIndex = "1001";
+    detailModal.style.width = "50%";
+    detailModal.style.height = "60vh";
+    detailModal.style.overflowY = "auto";
+    detailModal.style.minWidth = "300px";
+
+    // Window controls
+    let controls = `<div style="display: flex; justify-content: flex-end; gap: 5px; margin-bottom: 10px;">
+                        <button onclick="minimizeModal()">_</button>
+                        <button onclick="maximizeModal()">⬜</button>
+                        <button onclick="closeModal()">X</button>
+                    </div>`;
+
+    detailModal.innerHTML = controls + detailTable;
+    document.body.appendChild(detailModal);
+}
+
+// Function to close all modals
+function closeModal() {
+    document.querySelectorAll("div").forEach(el => {
+        if (el.style.zIndex === "1000" || el.style.zIndex === "1001") el.remove();
+    });
+}
+
+</script>
+
+</script>
